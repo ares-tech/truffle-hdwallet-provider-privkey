@@ -1,6 +1,6 @@
 {
   "name": "truffle-hdwallet-provider-privkey",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "HD Wallet-enabled Web3 provider for use with raw private key",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
   "dependencies": {
     "bip39": "^2.2.0",
     "ethereumjs-wallet": "^0.6.0",
+    "ethereumjs-util": "^5.2.0",
     "web3": "^0.18.2",
     "web3-provider-engine": "^8.4.0"
   }
