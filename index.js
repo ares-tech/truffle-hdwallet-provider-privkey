@@ -5,6 +5,18 @@ const Transaction = require('ethereumjs-tx')
 const ProviderEngine = require('web3-provider-engine')
 const Web3Subprovider = require('web3-provider-engine/subproviders/web3.js')
 const ethereumjsWallet = require('ethereumjs-wallet')
+const ethereumjsUtil = require('ethereumjs-util')
+
+
+function concatSig(v, r, s) {
+  r = ethereumjsUtil.fromSigned(r)
+  s = ethereumjsUtil.fromSigned(s)
+  v = ethereumjsUtil.bufferToInt(v)
+  r = ethereumjsUtil.toUnsigned(r).toString('hex')
+  s = ethereumjsUtil.toUnsigned(s).toString('hex')
+  v = ethereumjsUtil.stripHexPrefix(ethereumjsUtil.intToHex(v))
+  return ethereumjsUtil.addHexPrefix(r.concat(s, v).toString("hex"))
+}
 
 function HDWalletProvider (privateKeys, providerUrl) {
 
@@ -34,6 +46,18 @@ function HDWalletProvider (privateKeys, providerUrl) {
         } else {
           cb(null, tmpWallets[address].getPrivateKey().toString('hex'))
         }
+      },
+      signMessage: function (msgParams, cb) {
+        let pkey
+        if (tmpWallets[msgParams.from]) {
+          pkey = tmpWallets[msgParams.from].getPrivateKey()
+        } else {
+          cb('Account not found')
+        }
+        var msgHash = ethereumjsUtil.sha3(msgParams.data)
+        var sig = ethereumjsUtil.ecsign(msgHash, Buffer.from(pkey, 'hex'))
+        var serialized = ethereumjsUtil.bufferToHex(concatSig(sig.v, sig.r, sig.s))
+        cb(null, serialized)
       },
       signTransaction: function (txParams, cb) {
         let pkey
