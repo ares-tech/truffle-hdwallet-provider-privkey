@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rhlsthrm/truffle-hdwallet-provider-privkey.git"
+    "url": "git+https://github.com/ares-tech/truffle-hdwallet-provider-privkey.git"
   },
   "keywords": [
     "ethereum"
